@@ -1,0 +1,12 @@
+{
+  "name": "cpp-images",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "squares.cpp": "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig g++ squares.cpp -o build/squares $(Magick++-config --cppflags --cxxflags --ldflags --libs)",
+    "clean": "rm -rf build/* && rm -rf output"
+  },
+  "author": "",
+  "license": "ISC"
+}
