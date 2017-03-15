@@ -1,4 +1,4 @@
-# CPP Images
+# C++ Images
 
 This is toy repo for learning C++ by playing around with images.
 
