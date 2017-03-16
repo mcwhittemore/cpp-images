@@ -1,10 +1,12 @@
 #include <Magick++.h> 
 #include <iostream> 
 
-using namespace std; 
-using namespace Magick; 
+#include "./classes/image.h"
 
-int main(int argc,char **argv) 
+using namespace std; 
+using namespace pixicognitive;
+
+int main(int argc, char **argv) 
 { 
   if (argc != 3) {
     cout << "You must provide width and height as numbers\n";
@@ -19,13 +21,13 @@ int main(int argc,char **argv)
 
   int numColors = 8;
 
-  unsigned char* pix = static_cast<unsigned char*>(malloc(width*height*3));
+  Image::init(*argv);
+  Image img = Image (width, height);
 
   int mw = width/squareSize;
 
   for (int x=0; x<width; x++) {
     for (int y=0; y<height; y++) {
-      int pos = (x*height*3)+(y*3);
 
       int xp = x/squareSize; // current x square pos
       int yp = y/squareSize; // current y square pos
@@ -33,18 +35,11 @@ int main(int argc,char **argv)
       int color = cp % numColors; // current color of square
 
       for (int c=0; c<3; c++) {
-        pix[pos+c] = colors[(color*3)+c];
+        img.set(x, y, c, colors[(color*3)+c]);
       }
     }
   }
 
-  // Initialise ImageMagick library
-  InitializeMagick(*argv);
+  img.save("output/result.png");
 
-  // Create Image object and read in from pixel data above
-  Image image; 
-  image.read(width, height,"RGB",CharPixel,pix);
-
-  // Write the image to a file - change extension if you want a GIF or JPEG
-  image.write("output/result.png"); 
 }
