@@ -1,7 +1,7 @@
 IMNEEDS := $(shell Magick++-config --cppflags --cxxflags --ldflags --libs)
 
-squares:
-	g++ squares.cpp -o build/squares $(IMNEEDS)
+main:
+	g++ main.cpp -o build/pixicog $(IMNEEDS)
 
 clean:
 	rm -rf build/*

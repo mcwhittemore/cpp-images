@@ -1,8 +1,10 @@
+#pragma once
+
 #include <Magick++.h> 
 
 using namespace std; 
 
-namespace pixicognitive {
+namespace pixicog {
 
 class Image {
   private:
@@ -13,7 +15,7 @@ class Image {
     int toPos(int x, int y, int c);
     
   public:
-    Image(int w, int h);
+    Image(int w=0, int h=0);
     ~Image();
     int get(int x, int y, int c);
     void set(int x, int y, int c, int v);
