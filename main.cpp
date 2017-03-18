@@ -22,20 +22,27 @@ int main(int argc, char * argv[]) {
   char* command = argv[1];
   char* filePath = argv[2];
 
-  Image::init(*argv);
+  Image::Init(*argv);
 
   Image img = Image();
 
-  if (strcmp(command, "squares") == 0) {
-    RunSquares rs(size, args);
-    rs.Run(&img);
+  try {
+    if (strcmp(command, "squares") == 0) {
+      RunSquares rs(size, args);
+      rs.Run(&img);
+    }
+    else {
+      printf("'%s' is an invalid command", command);
+      return 1;
+    }
+
+    img.Save(filePath);
   }
-  else {
-    printf("'%s' is an invalid command", command);
+  catch (char* c) {
+    cout << c;
+    cout << "\n";
     return 1;
   }
-
-  img.save(filePath);
 
   return 0;
 }

@@ -8,65 +8,76 @@ namespace pixicog {
 
 class Image {
   private:
+    bool setup;
+    bool debug;
     unsigned char* pix;
     int width;
     int height;
     int numChannels;
-    int toPos(int x, int y, int c);
     int id;
-    bool debug;
+    int ToPos(int x, int y, int c);
     
   public:
     Image(bool d = false);
     ~Image();
-    void setup(int w, int h);
-    int get(int x, int y, int c);
-    void set(int x, int y, int c, int v);
-    void save(string file);
-    static void init(char *argv);
+    void Setup(int w, int h);
+    int Get(int x, int y, int c);
+    void Set(int x, int y, int c, int v);
+    void Save(string file);
+    static void Init(char *argv) {
+      Magick::InitializeMagick(argv);
+    };
 };
+
+/** Constructur **/
 
 Image::Image(bool d) {
   debug = d;
+  setup = false;
   id = rand() % 1000;
   if (debug) {
     printf("create image - %d\n", id);
   }
 }
 
+/** Deconstructor **/
+
 Image::~Image() {
+  if (setup == false) return; 
   free(pix);
   if (debug) {
     printf("delete image - %d\n", id);
   }
 }
 
-void Image::setup(int w, int h) {
+/** PRIVATE - turn x, y, c into an pos in the underlaying array **/
+
+int Image::ToPos(int x, int y, int c) {
+  return (y*width*numChannels)+(x*numChannels) + c;
+}
+
+/** Config the under laying underlaying **/
+
+void Image::Setup(int w, int h) {
+  if (setup) throw "You cannot setup multiple times";
+  setup = true;
   width = w;
   height = h;
   numChannels = 3;
   pix = static_cast<unsigned char*>(malloc(width*height*numChannels));
 }
 
-void Image::init(char *argv) {
- Magick::InitializeMagick(argv);
-}
-
-int Image::toPos(int x, int y, int c) {
-  return (y*width*numChannels)+(x*numChannels) + c;
-}
-
-int Image::get(int x, int y, int c) {
-  int pos = toPos(x, y, c);
+int Image::Get(int x, int y, int c) {
+  int pos = ToPos(x, y, c);
   return pix[pos];
 }
 
-void Image::set(int x, int y, int c, int v) {
-  int pos = toPos(x, y, c);
+void Image::Set(int x, int y, int c, int v) {
+  int pos = ToPos(x, y, c);
   pix[pos] = v;
 }
 
-void Image::save(string file) {
+void Image::Save(string file) {
   // Create Image object and read in from pixel data above
   Magick::Image image; 
   if (debug) {

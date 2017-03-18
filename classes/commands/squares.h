@@ -12,7 +12,6 @@ class RunSquares {
   public:
     RunSquares(int argc, char *args[]) {
       if (argc != 2) {
-        printf("why %d", argc);
         throw "You must provide width and height as numbers";
       }
   
@@ -22,7 +21,7 @@ class RunSquares {
 
     }
     void Run(Image *img) {
-      img->setup(width, height);
+      img->Setup(width, height);
 
       unsigned char colors[]={0,0,0, 255,0,0, 255,255,0, 255,0,255, 255,255,255, 0,255,0, 0,255,255, 0,0,255};
 
@@ -39,7 +38,7 @@ class RunSquares {
           int color = cp % numColors; // current color of square
 
           for (int c=0; c<3; c++) {
-            img->set(x, y, c, colors[(color*3)+c]);
+            img->Set(x, y, c, colors[(color*3)+c]);
           }
         }
       }
