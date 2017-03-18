@@ -2,7 +2,6 @@
 #include "./classes/image.h"
 
 // the list of commands
-#include "./classes/command.h"
 #include "./classes/commands/squares.h"
 
 using namespace std; 
@@ -14,29 +13,29 @@ int main(int argc, char * argv[]) {
   // 3: output
   // mas: to be passed to command.
   
-  int size = argc - 2;
+  int size = argc - 3;
   char  *args[size];
-  for (int i=2; i<argc; i++) {
-    printf("arg %d is %s\n", i-2, argv[i]);
-    args[i-2] = argv[i];
+  for (int i=3; i<argc; i++) {
+    args[i-3] = argv[i];
   }
 
   char* command = argv[1];
+  char* filePath = argv[2];
 
-  Command *cmd;
+  Image::init(*argv);
+
+  Image img = Image();
 
   if (strcmp(command, "squares") == 0) {
-    RunSquares rs = RunSquares(size, args);
-    cmd = &rs;
+    RunSquares rs(size, args);
+    rs.Run(&img);
   }
   else {
     printf("'%s' is an invalid command", command);
     return 1;
   }
 
-  Image::init(*argv);
-  cmd->Run();
-  cmd->Save("output/result.png");
+  img.save(filePath);
 
   return 0;
 }
