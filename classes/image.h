@@ -14,6 +14,7 @@ class Image {
     int width;
     int height;
     int numChannels;
+    int size;
     int id;
     int ToPos(int x, int y, int c);
     
@@ -21,8 +22,10 @@ class Image {
     Image(bool d = false);
     ~Image();
     void Setup(int w, int h);
+    void Paint(unsigned char* color);
     int Get(int x, int y, int c);
     void Set(int x, int y, int c, int v);
+    void Set(int x, int y, unsigned char* color);
     void Save(string file);
     static void Init(char *argv) {
       Magick::InitializeMagick(argv);
@@ -64,7 +67,17 @@ void Image::Setup(int w, int h) {
   width = w;
   height = h;
   numChannels = 3;
-  pix = static_cast<unsigned char*>(malloc(width*height*numChannels));
+  size = width * height * numChannels;
+  pix = static_cast<unsigned char*>(malloc(size));
+}
+
+void Image::Paint(unsigned char* color) {
+  for (int i=0; i<size; i+=numChannels) {
+    pix[i] = color[0];
+    pix[i+1] = color[1];
+    pix[i+2] = color[2];
+    if (numChannels == 4) pix[i+3] = color[3];
+  }
 }
 
 int Image::Get(int x, int y, int c) {
@@ -75,6 +88,13 @@ int Image::Get(int x, int y, int c) {
 void Image::Set(int x, int y, int c, int v) {
   int pos = ToPos(x, y, c);
   pix[pos] = v;
+}
+
+void Image::Set(int x, int y, unsigned char* color) {
+ int pos = ToPos(x, y, 0); 
+ for (int c=0; c<numChannels; c++) {
+   pix[pos+c] = color[c];
+ }
 }
 
 void Image::Save(string file) {
