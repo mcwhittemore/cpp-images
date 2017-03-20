@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Magick++.h> 
+#include "./exceptions.h"
 
 using namespace std; 
 
@@ -11,20 +12,25 @@ class Image {
     bool setup;
     bool debug;
     unsigned char* pix;
+    int id;
+    int ToPos(int x, int y, int c);
+    int size;
     int width;
     int height;
     int numChannels;
-    int size;
-    int id;
-    int ToPos(int x, int y, int c);
-    
+
   public:
     Image(bool d = false);
     ~Image();
     void Setup(int w, int h);
     void Paint(unsigned char* color);
+    int Size() { return size; };
+    int Width() { return width; };
+    int Height() { return height; };
+    int NumChannels() { return numChannels; };
     int Get(int x, int y, int c);
     void Set(int x, int y, int c, int v);
+    void Set(int p, int v);
     void Set(int x, int y, unsigned char* color);
     void Save(string file);
     static void Init(char *argv) {
@@ -62,7 +68,7 @@ int Image::ToPos(int x, int y, int c) {
 /** Config the under laying underlaying **/
 
 void Image::Setup(int w, int h) {
-  if (setup) throw "You cannot setup multiple times";
+  if (setup) throw ImageMultipleSetup;
   setup = true;
   width = w;
   height = h;
@@ -71,33 +77,39 @@ void Image::Setup(int w, int h) {
   pix = static_cast<unsigned char*>(malloc(size));
 }
 
-void Image::Paint(unsigned char* color) {
-  for (int i=0; i<size; i+=numChannels) {
-    pix[i] = color[0];
-    pix[i+1] = color[1];
-    pix[i+2] = color[2];
-    if (numChannels == 4) pix[i+3] = color[3];
-  }
-}
+/*void Image::Open(string path) {
+  if (setup) throw ImageMultipleSetup;
+}*/
 
 int Image::Get(int x, int y, int c) {
+  if (!setup) throw ImageNotSetup;
   int pos = ToPos(x, y, c);
   return pix[pos];
 }
 
+// Set a specific channel for one pixel
 void Image::Set(int x, int y, int c, int v) {
+  if (!setup) throw ImageNotSetup;
   int pos = ToPos(x, y, c);
   pix[pos] = v;
 }
 
+// Set all channels for one pixel
 void Image::Set(int x, int y, unsigned char* color) {
+  if (!setup) throw ImageNotSetup;
  int pos = ToPos(x, y, 0); 
  for (int c=0; c<numChannels; c++) {
    pix[pos+c] = color[c];
  }
 }
 
+//Set a specific value in the underlaying array
+void Image::Set(int p, int v) {
+  pix[p] = v;
+}
+
 void Image::Save(string file) {
+  if (!setup) throw ImageNotSetup;
   // Create Image object and read in from pixel data above
   Magick::Image image; 
   if (debug) {

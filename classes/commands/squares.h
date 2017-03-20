@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../exceptions.h"
+
 using namespace std; 
 
 namespace pixicog {
@@ -12,7 +14,7 @@ class RunSquares {
   public:
     RunSquares(int argc, char *args[]) {
       if (argc != 2) {
-        throw "You must provide width and height as numbers";
+        throw CommandMissingArgs;
       }
   
       squareSize = 20;
