@@ -29,7 +29,7 @@ class Image {
     int Width() { return width; };
     int Height() { return height; };
     int NumChannels() { return numChannels; };
-    int Get(int x, int y, int c);
+    unsigned char Get(int x, int y, int c);
     void Set(int x, int y, int c, int v);
     void Set(int p, int v);
     void Set(int x, int y, unsigned char* color);
@@ -103,7 +103,7 @@ void Image::Open(string path) {
 
 }
 
-int Image::Get(int x, int y, int c) {
+unsigned char Image::Get(int x, int y, int c) {
   if (!setup) throw ImageNotSetup;
   int pos = ToPos(x, y, c);
   return pix[pos];
