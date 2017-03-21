@@ -6,6 +6,7 @@
 // the list of commands
 #include "./classes/commands/squares.h"
 #include "./classes/commands/cracks.h"
+#include "./classes/commands/pixelsort.h"
 
 using namespace std; 
 using namespace pixicog;
@@ -39,6 +40,10 @@ int main(int argc, char * argv[]) {
     else if (strcmp(command, "cracks") == 0) {
       RunCracks rc(size, args);
       rc.Run(&img);
+    }
+    else if (strcmp(command, "pixelsort") == 0) {
+      RunPixelsort rp(size, args);
+      rp.Run(&img);
     }
     else {
       printf("'%s' is an invalid command", command);
