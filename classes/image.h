@@ -22,7 +22,8 @@ class Image {
   public:
     Image(bool d = false);
     ~Image();
-    void Setup(int w, int h);
+    void Setup(int w, int h, int c=3);
+    void Open(string file);
     void Paint(unsigned char* color);
     int Size() { return size; };
     int Width() { return width; };
@@ -67,19 +68,40 @@ int Image::ToPos(int x, int y, int c) {
 
 /** Config the under laying underlaying **/
 
-void Image::Setup(int w, int h) {
+void Image::Setup(int w, int h, int c) {
   if (setup) throw ImageMultipleSetup;
   setup = true;
   width = w;
   height = h;
-  numChannels = 3;
+  numChannels = c;
   size = width * height * numChannels;
   pix = static_cast<unsigned char*>(malloc(size));
 }
 
-/*void Image::Open(string path) {
+void Image::Open(string path) {
   if (setup) throw ImageMultipleSetup;
-}*/
+  Magick::Image image; 
+  image.read(path);
+
+  width = (int) image.columns();
+  height = (int) image.rows();
+  numChannels = (int) image.channels();
+  Setup(width, height, numChannels);
+
+  MagickCore::Quantum *pixels = image.getPixels(0, 0, width, height);
+
+  for (int x=0; x<width; x++) {
+    for (int y=0; y<height; y++) {
+      unsigned offset = numChannels * (width * y + x);
+      for (int c=0; c<numChannels; c++) {
+        pix[offset+c] = pixels[offset+c];
+      }
+    }
+  }
+  
+  printf("width: %d, height: %d\n", width, height);
+
+}
 
 int Image::Get(int x, int y, int c) {
   if (!setup) throw ImageNotSetup;
