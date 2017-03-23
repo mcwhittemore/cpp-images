@@ -70,7 +70,7 @@ class RunPixelsort {
       }
     };
     int CheckForMatch(vector<unsigned char> color, int from, int at) {
-      int g = (color[1] + 1) % 10;
+      int g = (color[1] + 1);
       if (from == -1) {
         state = g;
         return 1;
@@ -78,7 +78,13 @@ class RunPixelsort {
 
       if (at - from < state) return 1;
 
-      if (g > state) {
+      bool greenIsMax = color[0] < color[1] && color[1] > color[2];
+      int gor = (int) color[1] / (color[0] + 1);
+      int gob = (int) color[1] / (color[2] + 1);
+
+      if (gor < 2 || gob < 2) return 0;
+
+      if (g < state && greenIsMax) {
         state = g;
         return 1;
       }
