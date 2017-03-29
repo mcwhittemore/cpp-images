@@ -12,7 +12,6 @@ class Image {
     bool setup;
     bool debug;
     unsigned char* pix;
-    int id;
     int ToPos(int x, int y, int c);
     int size;
     int width;
@@ -20,7 +19,8 @@ class Image {
     int numChannels;
 
   public:
-    Image(bool d = false);
+    Image(bool d = true);
+    Image(const Image &c) : pix(c.pix) {}; // copy constuctor
     ~Image();
     void Setup(int w, int h, int c=3);
     void Open(string file);
@@ -41,12 +41,9 @@ class Image {
 
 /** Constructur **/
 
-Image::Image(bool d) {
-  debug = d;
-  setup = false;
-  id = rand() % 1000;
+Image::Image(bool d) : debug(d), setup(false), pix(nullptr), height(0), width(0), size(0), numChannels(0) {
   if (debug) {
-    printf("create image - %d\n", id);
+    cout << this << " create image\n";
   }
 }
 
@@ -54,9 +51,10 @@ Image::Image(bool d) {
 
 Image::~Image() {
   if (setup == false) return; 
+  setup = false;
   free(pix);
   if (debug) {
-    printf("delete image - %d\n", id);
+    cout << this << " delete image\n";
   }
 }
 
@@ -99,8 +97,6 @@ void Image::Open(string path) {
     }
   }
   
-  printf("width: %d, height: %d\n", width, height);
-
 }
 
 unsigned char Image::Get(int x, int y, int c) {
@@ -135,7 +131,7 @@ void Image::Save(string file) {
   // Create Image object and read in from pixel data above
   Magick::Image image; 
   if (debug) {
-    printf("save image - %d\n", id);
+    cout << this << " save image\n";
   }
   image.read(width, height,"RGB",Magick::CharPixel,pix);
 
