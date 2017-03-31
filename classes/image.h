@@ -10,6 +10,7 @@ namespace pixicog {
 class Image {
   private:
     bool setup;
+    bool copy;
     bool debug;
     unsigned char* pix;
     int ToPos(int x, int y, int c);
@@ -20,7 +21,7 @@ class Image {
 
   public:
     Image(bool d = true);
-    Image(const Image &c) : pix(c.pix) {}; // copy constuctor
+    Image(const Image &c) : pix(c.pix), setup(c.setup), copy(true) {}; // copy constuctor
     ~Image();
     void Setup(int w, int h, int c=3);
     void Open(string file);
@@ -30,6 +31,7 @@ class Image {
     int Height() { return height; };
     int NumChannels() { return numChannels; };
     unsigned char Get(int x, int y, int c);
+    unsigned char Get(int p);
     void Set(int x, int y, int c, int v);
     void Set(int p, int v);
     void Set(int x, int y, unsigned char* color);
@@ -41,7 +43,7 @@ class Image {
 
 /** Constructur **/
 
-Image::Image(bool d) : debug(d), setup(false), pix(nullptr), height(0), width(0), size(0), numChannels(0) {
+Image::Image(bool d) : debug(d), setup(false), pix(nullptr), height(0), width(0), size(0), numChannels(0), copy(false) {
   if (debug) {
     cout << this << " create image\n";
   }
@@ -50,7 +52,7 @@ Image::Image(bool d) : debug(d), setup(false), pix(nullptr), height(0), width(0)
 /** Deconstructor **/
 
 Image::~Image() {
-  if (setup == false) return; 
+  if (setup == false || copy == true) return; 
   setup = false;
   free(pix);
   if (debug) {
@@ -97,6 +99,11 @@ void Image::Open(string path) {
     }
   }
   
+}
+
+unsigned char Image::Get(int p) {
+  if (!setup) throw ImageNotSetup;
+  return pix[p];
 }
 
 unsigned char Image::Get(int x, int y, int c) {
