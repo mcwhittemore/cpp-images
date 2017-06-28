@@ -24,11 +24,11 @@ class CommandMissingArgsClass : public exception {
   }
 } CommandMissingArgs;
 
-class MainMissingArgsClass : public exception {
+class TestMissingArgs : public exception {
   virtual const char* what() const throw() {
-    return "You must supply command and filePath";
+    return "You must supply a filePath";
   }
-} MainMissingArgs;
+} TestMissingArgs;
 
 class ColorDimUnexpectedClass : public exception {
   virtual const char* what() const throw() {

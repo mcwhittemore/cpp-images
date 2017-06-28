@@ -1,11 +1,12 @@
-#pragma once
+#include <iostream> 
 
-#include "../exceptions.h"
+#include "./classes/exceptions.h"
+#include "./classes/image.h"
 
-using namespace std; 
+namespace test {
 
-namespace pixicog {
-
+  using namespace pixicog;
+  
 class RunSquares {
   private:
     int squareSize;
@@ -47,5 +48,39 @@ class RunSquares {
 
     }
 };
+};
 
-}
+using namespace std; 
+using namespace pixicog;
+using namespace test;
+
+int main(int argc, char * argv[]) {
+
+  try {
+    if (argc < 2) throw TestMissingArgs;
+
+    char* filePath = argv[1];
+
+    int size = argc - 2;
+    char  *args[size];
+    for (int i=2; i<argc; i++) {
+      args[i-2] = argv[i];
+    }
+
+    Image::Init(*argv);
+
+    Image img = Image();
+
+    RunSquares rs(size, args);
+    rs.Run(&img);
+
+    img.Save(filePath);
+  }
+  catch (exception &e) {
+    cout << e.what() << "\n";
+    return 1;
+  }
+
+  return 0;
+};
+

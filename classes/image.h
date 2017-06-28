@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Magick++.h> 
 #include "./exceptions.h"
 
 using namespace std; 
@@ -37,7 +36,7 @@ class Image {
     void Set(int x, int y, unsigned char* color);
     void Save(string file);
     static void Init(char *argv) {
-      Magick::InitializeMagick(argv);
+      //Magick::InitializeMagick(argv);
     };
 };
 
@@ -80,7 +79,7 @@ void Image::Setup(int w, int h, int c) {
 
 void Image::Open(string path) {
   if (setup) throw ImageMultipleSetup;
-  Magick::Image image; 
+  /*Magick::Image image; 
   image.read(path);
 
   width = (int) image.columns();
@@ -98,6 +97,7 @@ void Image::Open(string path) {
       }
     }
   }
+  */
   
 }
 
@@ -136,7 +136,7 @@ void Image::Set(int p, int v) {
 void Image::Save(string file) {
   if (!setup) throw ImageNotSetup;
   // Create Image object and read in from pixel data above
-  Magick::Image image; 
+  /*Magick::Image image; 
   if (debug) {
     cout << this << " save image\n";
   }
@@ -144,6 +144,7 @@ void Image::Save(string file) {
 
   // Write the image to a file - change extension if you want a GIF or JPEG
   image.write(file); 
+  */
 }
 
 }
