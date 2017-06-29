@@ -18,7 +18,6 @@ All Node.js modules, when depending on each other, should be interoperable witho
 * @pixicog/restore: probs not called this, but something in the image restoration space
 * [@pixicog/gaussian-blur](https://en.wikipedia.org/wiki/Gaussian_blur)
 * [@pixicog/posterization](https://en.wikipedia.org/wiki/Posterization)
-* 
 
 ## Links for reading
 
